@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workshop intermedio · Esercizi pratici</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0b0e14; --bg-grad-1: #11263a; --card: #141925; --card-hover: #1a2030;
+        --border: #232a3a; --text: #e7ecf3; --muted: #8b95a7; --accent: #f7931a;
+        --accent-soft: rgba(247,147,26,.12); --mono-bg: #0d111a;
+        --btc: #f7931a; --btc-bg: rgba(247,147,26,.12);
+        --eth: #7b94f0; --eth-bg: rgba(98,126,234,.16);
+        --trx: #ff4d4d; --trx-bg: rgba(255,77,77,.13);
+        --bnb: #f3ba2f; --bnb-bg: rgba(243,186,47,.13);
+        --sol: #b98cff; --sol-bg: rgba(153,69,255,.16);
+        --success: #3ecf8e;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: "Inter", system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.55; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+      .hero { background: radial-gradient(1200px 400px at 15% -10%, var(--bg-grad-1), transparent 60%), radial-gradient(900px 360px at 100% 0%, rgba(247,147,26,.10), transparent 55%), var(--bg); border-bottom: 1px solid var(--border); padding: 56px 0 40px; }
+      .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+      .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+      .brand span { font-weight: 600; font-size: 14px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+      h1 { font-size: 40px; font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
+      .subtitle { color: var(--muted); font-size: 16px; margin-top: 12px; max-width: 680px; }
+      .search-wrap { position: relative; margin-top: 28px; max-width: 440px; }
+      .search-wrap > svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+      #search { width: 100%; height: 46px; padding: 0 16px 0 42px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 15px; font-family: inherit; outline: none; transition: border-color .15s, box-shadow .15s; }
+      #search::placeholder { color: var(--muted); }
+      #search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+      main { padding: 40px 0 64px; }
+      .group-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+      .group-head h2 { font-size: 22px; font-weight: 700; }
+      .count { font-size: 12px; font-weight: 600; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+      .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 15px; transition: transform .15s, border-color .15s, background .15s; }
+      .card.wide { grid-column: 1 / -1; }
+      .card:hover { transform: translateY(-2px); border-color: #2e3850; background: var(--card-hover); }
+      .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+      .name-row { display: flex; align-items: baseline; gap: 8px; }
+      .num { color: var(--muted); font-size: 13px; font-weight: 600; }
+      .name { font-size: 17px; font-weight: 700; }
+      .chip { font-size: 11px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; white-space: nowrap; }
+      .chip.btc { color: var(--btc); background: var(--btc-bg); }
+      .chip.trx { color: var(--trx); background: var(--trx-bg); }
+      .chip.bnb { color: var(--bnb); background: var(--bnb-bg); }
+      .chip.eth { color: var(--eth); background: var(--eth-bg); }
+      .chip.sol { color: var(--sol); background: var(--sol-bg); }
+      .description { color: var(--muted); font-size: 14px; }
+      .label { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; margin-bottom: 6px; }
+      .addr-row { display: flex; align-items: stretch; gap: 8px; }
+      .addr { flex: 1; min-width: 0; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 12px; background: var(--mono-bg); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; color: #c7d0de; word-break: break-all; }
+      .copy { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #1a1205; border: none; border-radius: 10px; padding: 0 14px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: background .15s, transform .1s; }
+      .copy:hover { background: #ffa733; } .copy:active { transform: scale(.96); } .copy.done { background: var(--success); color: #052517; }
+      .noresults { display: none; text-align: center; color: var(--muted); padding: 48px 0; }
+      footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; color: var(--muted); font-size: 13px; }
+      @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } .card.wide { grid-column: auto; } h1 { font-size: 32px; } }
+      @media (max-width: 480px) { .addr-row { flex-direction: column; } .copy { min-height: 42px; justify-content: center; } }
+      @media (prefers-color-scheme: light) { :root { --bg: #f6f7f9; --bg-grad-1: #e6eef6; --card: #fff; --card-hover: #fff; --border: #e3e7ee; --text: #131722; --muted: #687486; --mono-bg: #f4f6f9; } .addr { color: #38414f; } .card:hover { border-color: #d2d9e4; box-shadow: 0 6px 20px rgba(20,30,50,.06); } }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <div class="wrap">
+        <div class="brand">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" fill="#F7931A" width="26" height="26" aria-hidden="true"><path d="M14.5818 0C14.9085 0 15.2791.0407 15.2791.0407c-1.0963 1.3099-1.7569 2.9269-1.8905 4.6272A10.4 10.4 0 0 0 5.2608 12.9776C3.3732 13.181 1.2377 14.0414.0095 15.2708-.2823 6.8361 6.206 0 14.5818 0Zm2.1005 25.339c-.3863.0569-.7764.0851-1.1669.0843a13.2 13.2 0 0 1-2.013-.1657 15.4 15.4 0 0 1-2.0422 3.4878A14.65 14.65 0 0 1 .4967 18.2587c1.3157-1.555 4.3556-2.456 6.2432-2.456 4.026 0 6.1615 2.1276 6.9025 5.4439-2.4243-.6539-3.8626-2.0055-4.8079-4.011a5.3 5.3 0 0 0-3.2849-.0436c1.0678 4.0546 5.012 7.0832 9.817 7.0832 4.4373 0 6.3249-2.2496 6.3249-2.2496v-3.4413s-2.1764 2.2525-4.8863 2.703a10.4 10.4 0 0 0-8.3787-8.3097c.6973-3.4384 3.3258-5.3625 6.8996-5.3625s6.4504 2.5781 6.4504 2.5781V6.7954s-1.8497-1.7206-5.1346-2.0868c.0817-1.5114 1.0677-3.3978 2.1355-4.0953 4.4753 1.3922 8.7901 5.159 10.0212 10.6436 0 0-1.9721 1.9648-5.6685 1.9648-3.0399 0-4.9595-1.5143-6.0389-4.1737a5.4 5.4 0 0 0-3.4076 0c1.1903 4.258 4.9596 7.1209 9.1606 7.1209 4.1077 0 6.3249-1.8805 6.3249-1.8805 0 8.5132-6.532 14.614-14.2952 14.7768.9044-.872 1.6017-2.7845 1.8088-3.7262Z"/></svg>
+          <span>Workshop intermedio · Roma</span>
+        </div>
+        <h1>Esercizi pratici</h1>
+        <p class="subtitle">Analizza ogni caso e ricostruisci l'attività on-chain. Premi <strong>Copia</strong> per copiare indirizzi e hash negli appunti.</p>
+        <div class="search-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input id="search" type="search" placeholder="Cerca un esercizio, indirizzo o hash..." aria-label="Cerca esercizi" />
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section data-group>
+        <div class="group-head"><h2>Esercizi</h2><span class="count">19 esercizi</span></div>
+        <div class="grid">
+          <article class="card" data-search="sfida in bitcoin etiking 17guisveagjea1gaglbl6wucpdkuy6ylmj">
+            <div class="card-top"><div class="name-row"><span class="num">1.</span><h3 class="name">Sfida in Bitcoin</h3></div><span class="chip btc">Bitcoin</span></div>
+            <p class="description">EtiKing</p>
+            <div><div class="label">Indirizzo da analizzare</div><div class="addr-row"><code class="addr">17GuisVEagJeA1gAGLbL6wUcpDkUy6yLmJ</code><button class="copy" data-copy="17GuisVEagJeA1gAGLbL6wUcpDkUy6yLmJ" aria-label="Copia Indirizzo da analizzare"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="cambio di titolarità pickle.finance stolen funds 2020-11-21">
+            <div class="card-top"><div class="name-row"><span class="num">2.</span><h3 class="name">Cambio di titolarità</h3></div></div>
+            <p class="description">Pickle.finance Stolen Funds 2020-11-21</p>
+          </article>
+
+          <article class="card" data-search="identificare un servizio centralizzato 0x6168490a107e17bd23bd3b7153fec9abc3c62e0a">
+            <div class="card-top"><div class="name-row"><span class="num">3.</span><h3 class="name">Identificare un servizio centralizzato</h3></div><span class="chip eth">Ethereum</span></div>
+            <div><div class="label">Indirizzo da analizzare</div><div class="addr-row"><code class="addr">0x6168490A107E17bd23bd3b7153Fec9Abc3C62E0a</code><button class="copy" data-copy="0x6168490A107E17bd23bd3b7153Fec9Abc3C62E0a" aria-label="Copia Indirizzo da analizzare"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="peel chain e identificazione automatica bc1q9e375dcufkv0tn7sc8y8vv9lhesal4wtzc87ls">
+            <div class="card-top"><div class="name-row"><span class="num">4.</span><h3 class="name">Peel chain e identificazione automatica</h3></div><span class="chip btc">Bitcoin</span></div>
+            <div><div class="label">Indirizzo da analizzare</div><div class="addr-row"><code class="addr">bc1q9e375dcufkv0tn7sc8y8vv9lhesal4wtzc87ls</code><button class="copy" data-copy="bc1q9e375dcufkv0tn7sc8y8vv9lhesal4wtzc87ls" aria-label="Copia Indirizzo da analizzare"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="sfida misteriosa 1kmww6lgdgykbbrsxrfu9kdohz95fe9kqf">
+            <div class="card-top"><div class="name-row"><span class="num">5.</span><h3 class="name">Sfida misteriosa</h3></div><span class="chip btc">Bitcoin</span></div>
+            <div><div class="label">Indirizzo da analizzare</div><div class="addr-row"><code class="addr">1KmWW6LgdgykBBrSXrFu9kdoHZ95Fe9kQF</code><button class="copy" data-copy="1KmWW6LgdgykBBrSXrFu9kdoHZ95Fe9kQF" aria-label="Copia Indirizzo da analizzare"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="instant exchanges annidati 1j9uzvdfp5betix2ofkehbcdjvxd8cefpv">
+            <div class="card-top"><div class="name-row"><span class="num">6.</span><h3 class="name">Instant exchanges annidati</h3></div><span class="chip btc">Bitcoin</span></div>
+            <div><div class="label">Indirizzo da analizzare</div><div class="addr-row"><code class="addr">1J9UZvdFP5betiX2oFkeHBcDjVXD8ceFPV</code><button class="copy" data-copy="1J9UZvdFP5betiX2oFkeHBcDjVXD8ceFPV" aria-label="Copia Indirizzo da analizzare"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="instant exchanges bc1qmnw82l4dzsvpwe6m5e4t6wcc8fdeuz6q8xht49">
+            <div class="card-top"><div class="name-row"><span class="num">7.</span><h3 class="name">Instant exchanges</h3></div><span class="chip btc">Bitcoin</span></div>
+            <div><div class="label">Indirizzo da analizzare</div><div class="addr-row"><code class="addr">bc1qmnw82l4dzsvpwe6m5e4t6wcc8fdeuz6q8xht49</code><button class="copy" data-copy="bc1qmnw82l4dzsvpwe6m5e4t6wcc8fdeuz6q8xht49" aria-label="Copia Indirizzo da analizzare"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card wide" data-search="identificare le funzioni di uno smart contract 0x13f4ea83d0bd40e75c8222255bc855a974568dd4 0xd33526068d116ce69f19a9ee46f0bd304f21a51f 0x87870bca3f3fd6335c3f4ce8392d69350b4fa4e2 0x01e2919679362dfbc9ee1644ba9c6da6d6245bb1">
+            <div class="card-top"><div class="name-row"><span class="num">8.</span><h3 class="name">Identificare le funzioni di uno smart contract</h3></div><span class="chip eth">Ethereum</span></div>
+            <div><div class="label">Indirizzo contratto</div><div class="addr-row"><code class="addr">0x13f4EA83D0bd40E75C8222255bc855a974568Dd4</code><button class="copy" data-copy="0x13f4EA83D0bd40E75C8222255bc855a974568Dd4" aria-label="Copia Indirizzo contratto"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+            <div><div class="label">Indirizzo contratto</div><div class="addr-row"><code class="addr">0xD33526068D116cE69F19A9ee46F0bd304F21A51f</code><button class="copy" data-copy="0xD33526068D116cE69F19A9ee46F0bd304F21A51f" aria-label="Copia Indirizzo contratto"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+            <div><div class="label">Indirizzo contratto</div><div class="addr-row"><code class="addr">0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2</code><button class="copy" data-copy="0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2" aria-label="Copia Indirizzo contratto"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+            <div><div class="label">Indirizzo contratto</div><div class="addr-row"><code class="addr">0x01e2919679362dFBC9ee1644Ba9C6da6D6245BB1</code><button class="copy" data-copy="0x01e2919679362dFBC9ee1644Ba9C6da6D6245BB1" aria-label="Copia Indirizzo contratto"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="identificazione del creatore dello smart contract (1) 0x62494b3ed9663334e57f23532155ea0575c487c5">
+            <div class="card-top"><div class="name-row"><span class="num">9.</span><h3 class="name">Identificazione del creatore dello smart contract (1)</h3></div><span class="chip eth">Ethereum</span></div>
+            <div><div class="label">Indirizzo da analizzare</div><div class="addr-row"><code class="addr">0x62494b3ed9663334E57f23532155eA0575C487C5</code><button class="copy" data-copy="0x62494b3ed9663334E57f23532155eA0575C487C5" aria-label="Copia Indirizzo da analizzare"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="identificazione del creatore dello smart contract (2) 0x3c99f2a4b366d46bcf2277639a135a6d1288eceb">
+            <div class="card-top"><div class="name-row"><span class="num">10.</span><h3 class="name">Identificazione del creatore dello smart contract (2)</h3></div><span class="chip eth">Ethereum</span></div>
+            <div><div class="label">Indirizzo da analizzare</div><div class="addr-row"><code class="addr">0x3C99F2A4b366D46bcf2277639A135A6D1288EcEB</code><button class="copy" data-copy="0x3C99F2A4b366D46bcf2277639A135A6D1288EcEB" aria-label="Copia Indirizzo da analizzare"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card wide" data-search="identificare i token in entrata e uscita 0x7a58251572ea4b0ca25b409641eeabbfff65d69af6658a14e44de8c91c27d3cc 0x0b43829d5166b638d5b77dc2969080754f7e911235985143a4aeed9fd0ae70a3 0x2a31985222e210c18478e61be9b5ab960612d315f78eb05fecbd998f5b7ac4e9">
+            <div class="card-top"><div class="name-row"><span class="num">11.</span><h3 class="name">Identificare i token in entrata e uscita</h3></div><span class="chip eth">Ethereum</span></div>
+            <div><div class="label">Transaction hash</div><div class="addr-row"><code class="addr">0x7a58251572ea4b0ca25b409641eeabbfff65d69af6658a14e44de8c91c27d3cc</code><button class="copy" data-copy="0x7a58251572ea4b0ca25b409641eeabbfff65d69af6658a14e44de8c91c27d3cc" aria-label="Copia Transaction hash"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+            <div><div class="label">Transaction hash</div><div class="addr-row"><code class="addr">0x0b43829d5166b638d5b77dc2969080754f7e911235985143a4aeed9fd0ae70a3</code><button class="copy" data-copy="0x0b43829d5166b638d5b77dc2969080754f7e911235985143a4aeed9fd0ae70a3" aria-label="Copia Transaction hash"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+            <div><div class="label">Transaction hash</div><div class="addr-row"><code class="addr">0x2a31985222e210c18478e61be9b5ab960612d315f78eb05fecbd998f5b7ac4e9</code><button class="copy" data-copy="0x2a31985222e210c18478e61be9b5ab960612d315f78eb05fecbd998f5b7ac4e9" aria-label="Copia Transaction hash"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="ricostruire il quadro completo (1) 0x64ba3e735b4ec5ae3d46712b86c3b7f907ff62db">
+            <div class="card-top"><div class="name-row"><span class="num">12.</span><h3 class="name">Ricostruire il quadro completo (1)</h3></div><span class="chip eth">Ethereum</span></div>
+            <div><div class="label">Indirizzo da analizzare</div><div class="addr-row"><code class="addr">0x64bA3e735B4EC5ae3d46712B86C3B7F907fF62DB</code><button class="copy" data-copy="0x64bA3e735B4EC5ae3d46712B86C3B7F907fF62DB" aria-label="Copia Indirizzo da analizzare"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="tracciare swap in dex 0x14ec0cd2acee4ce37260b925f74648127a889a28">
+            <div class="card-top"><div class="name-row"><span class="num">13.</span><h3 class="name">Tracciare swap in DEX</h3></div><span class="chip eth">Ethereum</span></div>
+            <div><div class="label">Indirizzo da analizzare</div><div class="addr-row"><code class="addr">0x14EC0cD2aCee4Ce37260b925F74648127a889a28</code><button class="copy" data-copy="0x14EC0cD2aCee4Ce37260b925F74648127a889a28" aria-label="Copia Indirizzo da analizzare"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="ricostruire il quadro completo (2) 0x60defb7c1071df6e439e57fe95550dcb154df6b1">
+            <div class="card-top"><div class="name-row"><span class="num">14.</span><h3 class="name">Ricostruire il quadro completo (2)</h3></div><span class="chip eth">Ethereum</span></div>
+            <div><div class="label">Indirizzo da analizzare</div><div class="addr-row"><code class="addr">0x60deFb7c1071dF6E439e57fE95550DcB154Df6b1</code><button class="copy" data-copy="0x60deFb7c1071dF6E439e57fE95550DcB154Df6b1" aria-label="Copia Indirizzo da analizzare"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="bridge 220fa989fc253a7598bb86d442b05edc215a87f0f382c9fafb13cd9363bbd93a">
+            <div class="card-top"><div class="name-row"><span class="num">15.</span><h3 class="name">Bridge</h3></div></div>
+            <div><div class="label">Transaction hash</div><div class="addr-row"><code class="addr">220fa989fc253a7598bb86d442b05edc215a87f0f382c9fafb13cd9363bbd93a</code><button class="copy" data-copy="220fa989fc253a7598bb86d442b05edc215a87f0f382c9fafb13cd9363bbd93a" aria-label="Copia Transaction hash"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="tracciamento dei flussi su tron 1bnnwyhzy4joxwfupie81ewg6x5tjajkcs">
+            <div class="card-top"><div class="name-row"><span class="num">16.</span><h3 class="name">Tracciamento dei flussi su TRON</h3></div><span class="chip btc">Bitcoin</span></div>
+            <div><div class="label">Indirizzo da analizzare</div><div class="addr-row"><code class="addr">1BnNWyhzY4JoXwfUpiE81eWg6X5tJaJKCs</code><button class="copy" data-copy="1BnNWyhzY4JoXwfUpiE81eWg6X5tJaJKCs" aria-label="Copia Indirizzo da analizzare"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="timing &amp; amount analysis 0xcb377b9e0448c529ebf96c1e1e670bacc7f0037f">
+            <div class="card-top"><div class="name-row"><span class="num">17.</span><h3 class="name">Timing &amp; Amount Analysis</h3></div><span class="chip eth">Ethereum</span></div>
+            <div><div class="label">Indirizzo da analizzare</div><div class="addr-row"><code class="addr">0xCB377b9E0448c529Ebf96c1E1E670BAcC7f0037F</code><button class="copy" data-copy="0xCB377b9E0448c529Ebf96c1E1E670BAcC7f0037F" aria-label="Copia Indirizzo da analizzare"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="time and amount search b8578394b406980fe832368444e19afa90e9b97e902106567aaddceb5820c929">
+            <div class="card-top"><div class="name-row"><span class="num">18.</span><h3 class="name">Time and Amount Search</h3></div></div>
+            <div><div class="label">Transaction hash</div><div class="addr-row"><code class="addr">b8578394b406980fe832368444e19afa90e9b97e902106567aaddceb5820c929</code><button class="copy" data-copy="b8578394b406980fe832368444e19afa90e9b97e902106567aaddceb5820c929" aria-label="Copia Transaction hash"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+
+          <article class="card" data-search="$mbappe 9urvxmvzvoh5dner3hyqm4s7scixdrpne1hnr6ezpump">
+            <div class="card-top"><div class="name-row"><span class="num">19.</span><h3 class="name">$MBAPPE</h3></div><span class="chip sol">Solana</span></div>
+            <div><div class="label">Indirizzo token</div><div class="addr-row"><code class="addr">9urVxmVzVoh5DNER3hyQm4s7sCixdRpNE1HNR6ezpump</code><button class="copy" data-copy="9urVxmVzVoh5DNER3hyQm4s7sCixdRpNE1HNR6ezpump" aria-label="Copia Indirizzo token"><span>⧉</span><span class="lbl">Copia</span></button></div></div>
+          </article>
+        </div>
+      </section>
+      <p class="noresults" id="noresults">Nessun esercizio corrisponde alla ricerca.</p>
+    </main>
+
+    <footer>Workshop intermedio · Esercizi di analisi on-chain · Roma</footer>
+    <script>
+      document.addEventListener("click", async (event) => {
+        const button = event.target.closest(".copy");
+        if (!button) return;
+        const value = button.dataset.copy;
+        try { await navigator.clipboard.writeText(value); }
+        catch (_) {
+          const area = document.createElement("textarea");
+          area.value = value; area.style.position = "fixed"; area.style.opacity = "0";
+          document.body.appendChild(area); area.select(); document.execCommand("copy"); area.remove();
+        }
+        const label = button.querySelector(".lbl");
+        label.textContent = "Copiato!"; button.classList.add("done");
+        setTimeout(() => { label.textContent = "Copia"; button.classList.remove("done"); }, 1400);
+      });
+      const search = document.getElementById("search");
+      const noresults = document.getElementById("noresults");
+      search.addEventListener("input", () => {
+        const query = search.value.trim().toLowerCase();
+        let visible = 0;
+        document.querySelectorAll(".card").forEach((card) => {
+          const content = (card.dataset.search + " " + card.textContent).toLowerCase();
+          const matches = content.includes(query);
+          card.style.display = matches ? "" : "none";
+          if (matches) visible += 1;
+        });
+        noresults.style.display = visible ? "none" : "block";
+      });
+    </script>
+  </body>
+</html>
